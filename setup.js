@@ -17,11 +17,14 @@ async function run() {
     if (!cachedMillPath) {
       core.info('no cached version found');
       core.info('downloading mill');
-      await io.mkdirP(millPath);
+      // await io.mkdirP(millPath);
       await tc.downloadTool(`https://github.com/lihaoyi/mill/releases/download/${millVersion}/${millVersion}-assembly`, millPath);
+      core.info(`downloaded to ${millPath}`);
       // await io.cp(downloadPath, `${millPath}/mill`, { force: true });
       fs.chmodSync(`${millPath}`, '0755')
+      core.info(`chmod 755 to ${millPath}`);
       cachedMillPath = await tc.cacheDir(millPath, 'mill', millVersion);
+      core.info(`added ${millPath} to cache and got ${cachedMillPath}`);
     } else {
       core.info(`using cached version of mill: ${cachedMillPath}`);
     }
