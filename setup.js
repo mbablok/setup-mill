@@ -1,5 +1,6 @@
 const core = require('@actions/core');
 const exec = require('@actions/exec');
+const io = require('@actions/io');
 const tc = require('@actions/tool-cache');
 const fs = require('fs');
 const os = require('os');
@@ -16,8 +17,8 @@ async function run() {
     if (!cachedMillPath) {
       core.info('no cached version found');
       core.info('downloading mill');
+      await io.mkdirP(millPath);
       await tc.downloadTool(`https://github.com/lihaoyi/mill/releases/download/${millVersion}/${millVersion}-assembly`, millPath);
-      // await io.mkdirP(millPath);
       // await io.cp(downloadPath, `${millPath}/mill`, { force: true });
       fs.chmodSync(`${millPath}`, '0755')
       cachedMillPath = await tc.cacheDir(millPath, 'mill', millVersion);
